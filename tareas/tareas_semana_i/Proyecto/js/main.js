@@ -1,14 +1,15 @@
 "use strict";
 
 function main() {
-  // Get A WebGL context
-  /** @type {HTMLCanvasElement} */
+  
+  //Declare canvas and gl variables to set the draw objects.
   var canvas = document.getElementById("canvas");
   var gl = canvas.getContext("webgl");
   if (!gl) {
     return;
   }
 
+  //Create the vertex of the Objects
   var createFlattenedVertices = function(gl, vertices) {
     return webglUtils.createBufferInfoFromArrays(
         gl,
@@ -23,17 +24,18 @@ function main() {
       );
   };
 
+  //We use this primitive functions to create in an easy way, two "2d objects" 
   var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 22, 30));
-
   var coneBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(5, 0, 20, 12, 1, true, false));
 
   // setup GLSL program
-  var programInfo = webglUtils.createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+  var programInfo = webglUtils.createProgramInfo(gl, ["vertex-shader", "fragment-shader"]);
 
   function degToRad(d) {
     return d * Math.PI / 180;
   }
 
+  //Radiance of the camera
   var cameraAngleRadians = degToRad(0);
   var fieldOfViewRadians = degToRad(60);
   var cameraHeight = 50;
@@ -48,10 +50,13 @@ function main() {
     u_colorMult: [0.5, 0.5, 1, 1],
     u_matrix: m4.identity(),
   };
+  
+  //Positions of objects.
   var sphereTranslation = [  -20, 0, 0];
 
   var coneTranslation   = [ 10, 0, 0];
 
+  //Draw the objects according to the uniforms and bufferInfo
   var objectsToDraw = [
     {
       programInfo: programInfo,
@@ -66,6 +71,7 @@ function main() {
     },
   ];
 
+  //Add arrays values.
   function computeMatrix(viewProjectionMatrix, translation,) {
     var matrix = m4.translate(viewProjectionMatrix,
         translation[0],
@@ -95,10 +101,10 @@ function main() {
     // Compute the projection matrix
     var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     var projectionMatrix =
-        m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
+        m4.perspective(fieldOfViewRadians, aspect, 1, 1000);
 
     // Compute the camera's matrix using look at.
-    var cameraPosition = [0, 0, 100];
+    var cameraPosition = [0, 0, 50];
     var target = [0, 0, 0];
     var up = [0, 1, 0];
     var cameraMatrix = m4.lookAt(cameraPosition, target, up);
@@ -113,18 +119,16 @@ function main() {
     // Compute the matrices for each object.
     sphereUniforms.u_matrix = computeMatrix(
         viewProjectionMatrix,
-        sphereTranslation,
-        );
+        sphereTranslation,);
 
     
 
     coneUniforms.u_matrix = computeMatrix(
         viewProjectionMatrix,
-        coneTranslation,
-        );
+        coneTranslation,);
 
-    // ------ Draw the objects --------
-
+    //Draw the objects
+    
     objectsToDraw.forEach(function(object) {
       var programInfo = object.programInfo;
       var bufferInfo = object.bufferInfo;
