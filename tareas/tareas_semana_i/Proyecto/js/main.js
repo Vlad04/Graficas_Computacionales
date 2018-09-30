@@ -108,26 +108,20 @@ function main() {
 
     var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
 
-    var sphereXRotation =  time;
-    var sphereYRotation =  time;
     
-    var coneXRotation   =  time;
-    var coneYRotation   = -time;
 
     // Compute the matrices for each object.
     sphereUniforms.u_matrix = computeMatrix(
         viewProjectionMatrix,
         sphereTranslation,
-        sphereXRotation,
-        sphereYRotation);
+        );
 
     
 
     coneUniforms.u_matrix = computeMatrix(
         viewProjectionMatrix,
         coneTranslation,
-        coneXRotation,
-        coneYRotation);
+        );
 
     // ------ Draw the objects --------
 
