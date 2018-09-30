@@ -26,7 +26,7 @@ function main() {
 
   //We use this primitive functions to create in an easy way, two "2d objects" 
   var circleBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 22, 30));
-  var triangleBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(5, 0, 20, 50, 10, true, false));
+  var triangleBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(5, 5, 20, 50, 1, true, false));
 
   // setup GLSL program
   var programInfo = webglUtils.createProgramInfo(gl, ["vertex-shader", "fragment-shader"]);
